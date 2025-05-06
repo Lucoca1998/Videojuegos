@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videojuegos 🎮</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="loader-container" id="loaderContainer">
+        <div class="game-loader">
+            <div class="pacman"></div>
+            <div class="ghost pink"></div>
+            <div class="ghost blue"></div>
+            <div class="ghost orange"></div>
+        </div>
+        <p class="loading-text">Cargando datos...</p>
+    </div>
+
+    <header class="game-header animate__animated animate__fadeInDown">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fa-solid fa-gamepad animate__animated animate__pulse animate__infinite"></i> Videojuegos
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <div class="row stats-container animate__animated animate__fadeInUp">
+            <div class="col-md-3 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon"><i class="fas fa-dice-d20"></i></div>
+                    <div class="stats-info">
+                        <h3 id="totalGames">0</h3>
+                        <p>Total Juegos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon"><i class="fas fa-globe"></i></div>
+                    <div class="stats-info">
+                        <h3 id="totalSales">0</h3>
+                        <p>Ventas Globales (M)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon"><i class="fas fa-desktop"></i></div>
+                    <div class="stats-info">
+                        <h3 id="platformCount">0</h3>
+                        <p>Plataformas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon"><i class="fas fa-puzzle-piece"></i></div>
+                    <div class="stats-info">
+                        <h3 id="genreCount">0</h3>
+                        <p>Géneros</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section animate__animated animate__fadeInLeft">
+            <div class="filter-header">
+                <h3><i class="fas fa-filter animate__animated animate__swing"></i> Filtros</h3>
+                <button id="resetFilters" class="reset-button">
+                    <i class="fas fa-undo"></i> Resetear
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="platformFilter">Plataforma:</label>
+                    <select id="platformFilter" class="form-select custom-select">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="genreFilter">Género:</label>
+                    <select id="genreFilter" class="form-select custom-select">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Años:</label>
+                    <div class="range-container">
+                        <div id="yearSlider"></div>
+                        <div class="range-values">
+                            <span id="yearRangeMin">1980</span>
+                            <span id="yearRangeMax">2020</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Ventas Globales (M):</label>
+                    <div class="range-container">
+                        <div id="salesSlider"></div>
+                        <div class="range-values">
+                            <span id="salesRangeMin">0</span>
+                            <span id="salesRangeMax">100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card data-table-card animate__animated animate__fadeInRight">
+            <div class="card-body">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-table animate__animated animate__swing"></i> Datos de Ventas</h3>
+                    <div class="table-actions">
+                        <button id="toggleTable" class="action-button" data-bs-toggle="collapse" data-bs-target="#tableCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <button id="exportCSV" class="action-button animate__animated animate__pulse animate__infinite">
+                            <i class="fas fa-download"></i> CSV
+                        </button>
+                    </div>
+                </div>
+                <div id="tableCollapse" class="collapse show">
+                    <div id="tableContainer" class="table-responsive">
+                        <table id="gamesTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Plataforma</th>
+                                    <th>Año</th>
+                                    <th>Género</th>
+                                    <th>Ventas Globales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                        <div class="pagination">
+                            <button id="prevPage" disabled>Anterior</button>
+                            <span id="pageInfo">Página 1</span>
+                            <button id="nextPage">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-container animate__animated animate__fadeInUp">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-chart-pie"></i> Ventas por Región</h4>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesByRegionPie"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-trophy"></i> Top 5 Juegos</h4>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="topGamesBar"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-desktop"></i> Ventas por Plataforma</h4>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesByPlatformBar"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-chart-line"></i> Ventas a Través del Tiempo</h4>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesOverTimeLine"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-chart-area"></i> Ventas por Género</h4>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesByGenreRadar"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h4><i class="fas fa-layer-group"></i> Ventas por Región (Apiladas)</h4>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="stackedSalesArea"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="game-footer animate__animated animate__fadeInUp">
+        <div class="container">
+            <p>Videojuegos © 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
