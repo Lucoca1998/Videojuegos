@@ -371,6 +371,7 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
     transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    position: relative;
 }
 
 .chart-card:hover {
@@ -400,6 +401,19 @@ body {
     padding: 20px;
     height: 300px;
     transition: opacity var(--transition-speed);
+    position: relative;
+    min-height: 200px; /* Asegurar un tamaño mínimo para evitar que colapse */
+}
+
+.chart-container.no-data::after {
+    content: 'Sin datos disponibles';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-secondary);
+    font-size: 16px;
+    text-align: center;
 }
 
 .chart-card:hover .chart-container {
@@ -428,6 +442,8 @@ body {
     margin-bottom: 20px;
     text-align: center;
     box-shadow: var(--neon-glow);
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .noUi-target {
